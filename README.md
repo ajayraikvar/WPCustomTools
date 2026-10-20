@@ -6,16 +6,17 @@ A modular WordPress plugin by **Ajay Raikvar** for practical admin tools, widget
 - **Author:** Ajay Raikvar
 - **Website:** https://www.ajayraikvar.com
 - **Repository:** https://github.com/ajayraikvar/WPCustomTools
-- **Current version:** 1.0.0
+- **Current version:** 1.0.1
 - **License:** GPL-2.0-or-later
 
 ## Current feature
 
 ### WooCommerce product category search
-Adds a searchable input above the category checklist in the WooCommerce product editor. It filters the existing checklist in the browser and keeps parent paths visible when a child category matches.
+Adds a searchable input before the category checklist within the WooCommerce product categories panel. It filters the existing checklist in the browser and keeps ancestor categories visible when a child category matches.
 
 The feature:
 - Runs only on WordPress admin product edit/new screens.
+- Enqueues assets only when the current user has the WooCommerce `edit_products` capability.
 - Does not change product, category, term, or database records.
 - Does not send category data to external services.
 - Does not add public-facing assets.
@@ -30,10 +31,10 @@ The feature:
 
 ## Installation
 
-1. Download the repository as a ZIP, or create a ZIP with `wp-custom-tools.php` at the ZIP root and the `includes/` and `assets/` folders beside it.
+1. Download the installable ZIP from the repository or create a ZIP with `wp-custom-tools.php` at the root of the plugin folder, beside the `includes/` and `assets/` directories.
 2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**.
 3. Upload the ZIP and activate **WP Custom Tools**.
-4. Edit or create a WooCommerce product. A **Search product categories…** field should appear above the category checklist.
+4. Edit or create a WooCommerce product. A **Search product categories…** field should appear immediately before the checklist in the **All categories** panel.
 
 ## Structure
 
@@ -50,7 +51,8 @@ wp-custom-tools/
 │   └── php-lint.yml
 ├── .gitignore
 ├── LICENSE
-└── README.md
+├── README.md
+└── readme.txt
 ```
 
 Future functionality should be added as separate modules under `includes/`, with their own assets and narrowly scoped hooks. Planned areas may include additional tools, widgets, and Elementor-oriented product-grid templates.
@@ -58,24 +60,20 @@ Future functionality should be added as separate modules under `includes/`, with
 ## Security notes
 
 - All PHP entry points guard against direct access with `defined('ABSPATH') || exit`.
-- Assets are enqueued only on the product edit screen, not site-wide.
+- Assets are enqueued only on the product edit screen and only for users authorized to edit products.
 - The current feature is read-only with respect to WordPress data.
 - No network requests, telemetry, REST endpoints, database writes, or settings are created by this feature.
 - Future features must validate capabilities, use nonces for state-changing actions, sanitize input, escape output, and use prepared database operations where appropriate.
 
-No software can be guaranteed completely secure. Test upgrades and new features in a staging environment and maintain restorable backups.
+No software can be guaranteed completely secure. Test updates and new features in a staging environment and maintain restorable backups.
 
 ## Updating through GitHub
 
-Use Git as the source of truth for development. Commit changes to this repository and deploy a reviewed release ZIP. This initial version does **not** include an automatic in-dashboard updater or a private-token mechanism. A GitHub-hosted update checker can be added as a separate, reviewed module later without embedding personal access tokens in plugin code.
+Use Git as the source of truth for development. Commit changes to this repository and deploy a reviewed release ZIP. This release does **not** include an automatic in-dashboard updater. A GitHub-hosted update checker can be added as a separate reviewed module later.
 
 ## Development
 
-Run the PHP syntax workflow by pushing or opening a pull request. Local PHP syntax checks can also be run with:
-
-```sh
-find . -name '*.php' -print0 | xargs -0 -n1 php -l
-```
+The GitHub Actions workflow checks PHP syntax on PHP 8.3 and 8.5, and JavaScript syntax with Node.js.
 
 ## License
 
