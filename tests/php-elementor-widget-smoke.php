@@ -5,7 +5,7 @@
  * Run with: php tests/php-elementor-widget-smoke.php
  */
 
-namespace Elementor;
+namespace Elementor {
 
 class Controls_Manager {
 	const TAB_CONTENT = 'content';
@@ -81,6 +81,8 @@ class Widget_Base {
 	public function test_render() {
 		$this->render();
 	}
+}
+
 }
 
 namespace {
