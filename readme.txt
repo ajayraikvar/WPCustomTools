@@ -4,7 +4,7 @@ Tags: woocommerce, admin-tools, category-search, widgets, templates
 Requires at least: 6.4
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,8 +30,13 @@ Repository: https://github.com/ajayraikvar/WPCustomTools
 - WooCommerce active for the category search feature.
 
 == Security ==
-The current feature is read-only and runs only on WooCommerce product edit/new screens. It does not create database records, network requests, settings, or REST endpoints. Test in staging and maintain backups before deploying software updates. No software can be guaranteed completely secure.
+The current feature is read-only and runs only on WooCommerce product edit/new screens for users with the WooCommerce edit_products capability. It does not create database records, network requests, settings, or REST endpoints. Test in staging and maintain backups before deploying software updates. No software can be guaranteed completely secure.
 
 == Changelog ==
+= 1.0.1 =
+* Fix category search field insertion in nested WooCommerce category metabox markup.
+* Enqueue the feature only for users with the edit_products capability.
+* Refresh asset cache version.
+
 = 1.0.0 =
 * Initial version with WooCommerce product category search.
