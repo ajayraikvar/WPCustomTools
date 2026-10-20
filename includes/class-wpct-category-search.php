@@ -13,11 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Adds a client-side search field to the product categories meta box.
  */
 final class Category_Search {
-	/**
-	 * Singleton instance.
-	 *
-	 * @var Category_Search|null
-	 */
+	/** @var Category_Search|null */
 	private static $instance = null;
 
 	/**
@@ -32,11 +28,7 @@ final class Category_Search {
 		return self::$instance;
 	}
 
-	/**
-	 * Register hooks.
-	 *
-	 * @return void
-	 */
+	/** Register hooks. */
 	public function init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
@@ -45,7 +37,6 @@ final class Category_Search {
 	 * Load assets only on the WooCommerce product editor.
 	 *
 	 * @param string $hook Current admin page hook.
-	 * @return void
 	 */
 	public function enqueue_assets( $hook ) {
 		if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
@@ -53,11 +44,7 @@ final class Category_Search {
 		}
 
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( ! $screen || 'product' !== $screen->post_type ) {
-			return;
-		}
-
-		if ( ! class_exists( '\\WooCommerce' ) ) {
+		if ( ! $screen || 'product' !== $screen->post_type || ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
 
