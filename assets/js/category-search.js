@@ -19,16 +19,52 @@
 		return normalize(item.textContent);
 	}
 
+	function getAllCategoriesPanel(box) {
+		// WordPress taxonomy meta boxes use the "-all" tab for the full taxonomy tree
+		// and the "-pop" tab for "Most Used". Never bind the search to the latter.
+		return box.querySelector('#product_cat-all') ||
+			box.querySelector('.tabs-panel[id$="-all"]') ||
+			null;
+	}
+
+	function getAllCategoriesList(box, panel) {
+		if (panel) {
+			var panelList = panel.querySelector('.categorychecklist');
+			if (panelList) {
+				return panelList;
+			}
+		}
+
+		// WordPress's stable default ID for the full product category checklist.
+		var allList = box.querySelector('#product_catchecklist');
+		if (allList) {
+			return allList;
+		}
+
+		// Defensive fallback for markup variations: explicitly exclude the Most Used
+		// list, whose WordPress ID normally ends in "-pop".
+		var lists = Array.prototype.slice.call(box.querySelectorAll('.categorychecklist'));
+		for (var i = 0; i < lists.length; i += 1) {
+			if (!/-pop$/.test(lists[i].id || '') && (!panel || !lists[i].closest('.tabs-panel[id$="-pop"]'))) {
+				return lists[i];
+			}
+		}
+
+		return null;
+	}
+
 	function addSearchField(box) {
 		if (!box || box.dataset.wpctSearchReady === '1') {
 			return;
 		}
 
-		var list = box.querySelector('.categorychecklist');
+		var panel = getAllCategoriesPanel(box);
+		var list = getAllCategoriesList(box, panel);
 		if (!list || !list.parentNode) {
 			return;
 		}
 
+		// Do not mark the metabox initialized until a usable full category list exists.
 		box.dataset.wpctSearchReady = '1';
 
 		var wrapper = document.createElement('p');
@@ -37,8 +73,8 @@
 		var input = document.createElement('input');
 		input.type = 'search';
 		input.className = 'wpct-category-search';
-		input.placeholder = 'Search product categories…';
-		input.setAttribute('aria-label', 'Search product categories');
+		input.placeholder = 'Search all product categories…';
+		input.setAttribute('aria-label', 'Search all product categories');
 		input.setAttribute('autocomplete', 'off');
 		input.setAttribute('spellcheck', 'false');
 
@@ -49,8 +85,7 @@
 		wrapper.appendChild(input);
 		wrapper.appendChild(status);
 
-		// The checklist is nested inside a tabs panel, not a direct child of the metabox.
-		// Insert the control through the list's own parent to avoid a NotFoundError.
+		// Insert within the All categories panel; never insert/filter inside Most Used.
 		list.parentNode.insertBefore(wrapper, list);
 
 		function filterItems() {
@@ -72,6 +107,7 @@
 					matches += 1;
 					item.classList.add('wpct-search-match');
 
+					// Reveal ancestor category rows so nested matches stay navigable.
 					var parent = item.parentElement;
 					while (parent && parent !== list) {
 						if (parent.tagName === 'LI') {
