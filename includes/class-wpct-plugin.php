@@ -41,9 +41,11 @@ final class Plugin {
 		require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-category-search.php';
 		require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-admin-menu.php';
 		require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-additional-keywords.php';
+		require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-elementor-widget.php';
 
 		Category_Search::instance()->init();
 		Admin_Menu::instance()->init();
 		Additional_Keywords::instance()->init();
+		Elementor_Widget_Module::instance()->init();
 	}
 }
