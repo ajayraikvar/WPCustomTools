@@ -87,6 +87,15 @@ final class Admin_Menu {
 			'wp-custom-tools-updates',
 			array( $this, 'render_updates_page' )
 		);
+
+		add_submenu_page(
+			'wp-custom-tools',
+			__( 'Additional Keywords', 'wp-custom-tools' ),
+			__( 'Additional Keywords', 'wp-custom-tools' ),
+			'manage_options',
+			'wp-custom-tools-keywords',
+			array( $this, 'render_keywords_page' )
+		);
 	}
 
 	/**
@@ -110,6 +119,12 @@ final class Admin_Menu {
 			</div>
 
 			<div class="card" style="max-width: 760px;">
+				<h2><?php esc_html_e( 'Additional Keywords', 'wp-custom-tools' ); ?></h2>
+				<p><?php esc_html_e( 'Save extra keyword phrases against individual posts, pages, and products. Open an editor and find the WP Custom Tools — Additional Keywords box.', 'wp-custom-tools' ); ?></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=wp-custom-tools-keywords' ) ); ?>"><?php esc_html_e( 'Open Additional Keywords Tool', 'wp-custom-tools' ); ?></a></p>
+			</div>
+
+			<div class="card" style="max-width: 760px;">
 				<h2><?php esc_html_e( 'Plugin Updates', 'wp-custom-tools' ); ?></h2>
 				<p><?php esc_html_e( 'Manually check the version listed in the public GitHub repository.', 'wp-custom-tools' ); ?></p>
 				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=wp-custom-tools-updates' ) ); ?>"><?php esc_html_e( 'Open Updates', 'wp-custom-tools' ); ?></a></p>
@@ -121,6 +136,44 @@ final class Admin_Menu {
 				<a href="https://www.ajayraikvar.com" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Author Website', 'wp-custom-tools' ); ?></a>
 			</p>
 			<p><?php echo esc_html( sprintf( __( 'Installed version: %s', 'wp-custom-tools' ), WPCUSTOMTOOLS_VERSION ) ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render the Additional Keywords tool landing page.
+	 *
+	 * @return void
+	 */
+	public function render_keywords_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'wp-custom-tools' ), '', array( 'response' => 403 ) );
+		}
+
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Additional Keywords', 'wp-custom-tools' ); ?></h1>
+			<p><?php esc_html_e( 'Save and manage extra keyword phrases for a specific post, page, or product.', 'wp-custom-tools' ); ?></p>
+			<div class="card" style="max-width: 760px;">
+				<h2><?php esc_html_e( 'How to use', 'wp-custom-tools' ); ?></h2>
+				<ol>
+					<li><?php esc_html_e( 'Open an existing post, page, or product—or create a new one.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Find the “WP Custom Tools — Additional Keywords” box in the editor.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Enter one keyword phrase per line or separate phrases with commas, then save/update the content.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Use Copy Keywords to copy your list for other workflows.', 'wp-custom-tools' ); ?></li>
+				</ol>
+				<p class="description"><?php esc_html_e( 'This is an independent keyword manager. It does not write to AIOSEO private metadata, unlock AIOSEO Pro, or affect AIOSEO content scores automatically.', 'wp-custom-tools' ); ?></p>
+			</div>
+			<div class="card" style="max-width: 760px;">
+				<h2><?php esc_html_e( 'Choose content to edit', 'wp-custom-tools' ); ?></h2>
+				<p>
+					<a class="button button-primary" href="<?php echo esc_url( admin_url( 'edit.php' ) ); ?>"><?php esc_html_e( 'Posts', 'wp-custom-tools' ); ?></a>
+					<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=page' ) ); ?>"><?php esc_html_e( 'Pages', 'wp-custom-tools' ); ?></a>
+					<?php if ( post_type_exists( 'product' ) ) : ?>
+						<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=product' ) ); ?>"><?php esc_html_e( 'Products', 'wp-custom-tools' ); ?></a>
+					<?php endif; ?>
+				</p>
+			</div>
 		</div>
 		<?php
 	}
