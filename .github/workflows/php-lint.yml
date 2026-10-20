@@ -32,6 +32,7 @@ jobs:
         run: |
           find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
           php tests/php-additional-keywords-smoke.php
+          php tests/php-elementor-widget-smoke.php
 
   javascript-lint:
     name: JavaScript syntax and smoke tests
@@ -50,6 +51,7 @@ jobs:
           node --check assets/js/category-search.js
           node --check assets/js/additional-keywords.js
           node tests/js-tools-smoke.cjs
+          node tests/elementor-widget-smoke.cjs
 
   package:
     name: Build, verify and publish installable ZIP
@@ -82,7 +84,211 @@ jobs:
           unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/includes/class-wpct-additional-keywords.php$'
           unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/js/category-search.js$'
           unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/js/additional-keywords.js$'
-          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/css/additional-keywords.css$'
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/css/additional-keywords.css
+
+      - name: Upload installable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish public GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(grep -m1 '^[[:space:]]*[*] Version:' wp-custom-tools.php | awk '{print $3}')"
+          STABLE_TAG="$(grep -m1 '^Stable tag:' readme.txt | awk '{print $3}')"
+          if [ "$VERSION" != "$STABLE_TAG" ]; then
+            echo "Refusing to publish: plugin version and Stable tag do not match." >&2
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          ZIP="dist/WPCustomTools-v${VERSION}.zip"
+
+          if gh release view "$TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; leaving it unchanged."
+            exit 0
+          fi
+
+          cat > dist/release-notes.md <<'NOTES'
+          ## What's included
+
+          - WooCommerce category search scoped to the full **All categories** checklist, not **Most Used**.
+          - Additional Keywords editor box for supported posts, pages and products, with a phrase counter and copy helper.
+          - WP Custom Tools admin menu and manual GitHub version check.
+          - Elementor's editable WP Custom Product Card widget with image or self-hosted video, title, rating, pricing, offers and CTA controls.
+          - Input sanitization, capability checks, nonce validation and no keyword-management network calls.
+
+          ## Installation
+
+          In WordPress, go to **Plugins → Add New Plugin → Upload Plugin**, upload the attached ZIP, and replace the previous WP Custom Tools version when prompted.
+
+          ## Important
+
+          Additional Keywords are stored in WP Custom Tools metadata and do not automatically populate AIOSEO's private metadata or alter AIOSEO's content score.
+          NOTES
+
+          gh release create "$TAG" "$ZIP"             --repo "$GH_REPO"             --target "$GITHUB_SHA"             --title "WP Custom Tools v${VERSION}"             --notes-file dist/release-notes.md
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/includes/class-wpct-elementor-widget.php
+
+      - name: Upload installable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish public GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(grep -m1 '^[[:space:]]*[*] Version:' wp-custom-tools.php | awk '{print $3}')"
+          STABLE_TAG="$(grep -m1 '^Stable tag:' readme.txt | awk '{print $3}')"
+          if [ "$VERSION" != "$STABLE_TAG" ]; then
+            echo "Refusing to publish: plugin version and Stable tag do not match." >&2
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          ZIP="dist/WPCustomTools-v${VERSION}.zip"
+
+          if gh release view "$TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; leaving it unchanged."
+            exit 0
+          fi
+
+          cat > dist/release-notes.md <<'NOTES'
+          ## What's included
+
+          - WooCommerce category search scoped to the full **All categories** checklist, not **Most Used**.
+          - Additional Keywords editor box for supported posts, pages and products, with a phrase counter and copy helper.
+          - WP Custom Tools admin menu and manual GitHub version check.
+          - Input sanitization, capability checks, nonce validation and no keyword-management network calls.
+
+          ## Installation
+
+          In WordPress, go to **Plugins → Add New Plugin → Upload Plugin**, upload the attached ZIP, and replace the previous WP Custom Tools version when prompted.
+
+          ## Important
+
+          Additional Keywords are stored in WP Custom Tools metadata and do not automatically populate AIOSEO's private metadata or alter AIOSEO's content score.
+          NOTES
+
+          gh release create "$TAG" "$ZIP"             --repo "$GH_REPO"             --target "$GITHUB_SHA"             --title "WP Custom Tools v${VERSION}"             --notes-file dist/release-notes.md
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/includes/class-wpct-elementor-product-card.php
+
+      - name: Upload installable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish public GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(grep -m1 '^[[:space:]]*[*] Version:' wp-custom-tools.php | awk '{print $3}')"
+          STABLE_TAG="$(grep -m1 '^Stable tag:' readme.txt | awk '{print $3}')"
+          if [ "$VERSION" != "$STABLE_TAG" ]; then
+            echo "Refusing to publish: plugin version and Stable tag do not match." >&2
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          ZIP="dist/WPCustomTools-v${VERSION}.zip"
+
+          if gh release view "$TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; leaving it unchanged."
+            exit 0
+          fi
+
+          cat > dist/release-notes.md <<'NOTES'
+          ## What's included
+
+          - WooCommerce category search scoped to the full **All categories** checklist, not **Most Used**.
+          - Additional Keywords editor box for supported posts, pages and products, with a phrase counter and copy helper.
+          - WP Custom Tools admin menu and manual GitHub version check.
+          - Input sanitization, capability checks, nonce validation and no keyword-management network calls.
+
+          ## Installation
+
+          In WordPress, go to **Plugins → Add New Plugin → Upload Plugin**, upload the attached ZIP, and replace the previous WP Custom Tools version when prompted.
+
+          ## Important
+
+          Additional Keywords are stored in WP Custom Tools metadata and do not automatically populate AIOSEO's private metadata or alter AIOSEO's content score.
+          NOTES
+
+          gh release create "$TAG" "$ZIP"             --repo "$GH_REPO"             --target "$GITHUB_SHA"             --title "WP Custom Tools v${VERSION}"             --notes-file dist/release-notes.md
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/css/elementor-product-card.css
+
+      - name: Upload installable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish public GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(grep -m1 '^[[:space:]]*[*] Version:' wp-custom-tools.php | awk '{print $3}')"
+          STABLE_TAG="$(grep -m1 '^Stable tag:' readme.txt | awk '{print $3}')"
+          if [ "$VERSION" != "$STABLE_TAG" ]; then
+            echo "Refusing to publish: plugin version and Stable tag do not match." >&2
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          ZIP="dist/WPCustomTools-v${VERSION}.zip"
+
+          if gh release view "$TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; leaving it unchanged."
+            exit 0
+          fi
+
+          cat > dist/release-notes.md <<'NOTES'
+          ## What's included
+
+          - WooCommerce category search scoped to the full **All categories** checklist, not **Most Used**.
+          - Additional Keywords editor box for supported posts, pages and products, with a phrase counter and copy helper.
+          - WP Custom Tools admin menu and manual GitHub version check.
+          - Input sanitization, capability checks, nonce validation and no keyword-management network calls.
+
+          ## Installation
+
+          In WordPress, go to **Plugins → Add New Plugin → Upload Plugin**, upload the attached ZIP, and replace the previous WP Custom Tools version when prompted.
+
+          ## Important
+
+          Additional Keywords are stored in WP Custom Tools metadata and do not automatically populate AIOSEO's private metadata or alter AIOSEO's content score.
+          NOTES
+
+          gh release create "$TAG" "$ZIP"             --repo "$GH_REPO"             --target "$GITHUB_SHA"             --title "WP Custom Tools v${VERSION}"             --notes-file dist/release-notes.md
+
 
       - name: Upload installable ZIP artifact
         uses: actions/upload-artifact@v4
