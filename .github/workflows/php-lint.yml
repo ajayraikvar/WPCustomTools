@@ -58,7 +58,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="$(grep -m1 '^ \\* Version:' wp-custom-tools.php | awk '{print $3}')"
+          VERSION="$(grep -m1 '^[[:space:]]*[*] Version:' wp-custom-tools.php | awk '{print $3}')"
           test -n "$VERSION"
           mkdir -p package/wp-custom-tools dist
           cp wp-custom-tools.php readme.txt LICENSE package/wp-custom-tools/
