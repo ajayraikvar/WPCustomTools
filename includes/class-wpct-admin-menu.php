@@ -96,6 +96,15 @@ final class Admin_Menu {
 			'wp-custom-tools-keywords',
 			array( $this, 'render_keywords_page' )
 		);
+
+		add_submenu_page(
+			'wp-custom-tools',
+			__( 'Elementor Product Card', 'wp-custom-tools' ),
+			__( 'Elementor Product Card', 'wp-custom-tools' ),
+			'manage_options',
+			'wp-custom-tools-elementor',
+			array( $this, 'render_elementor_page' )
+		);
 	}
 
 	/**
@@ -122,6 +131,12 @@ final class Admin_Menu {
 				<h2><?php esc_html_e( 'Additional Keywords', 'wp-custom-tools' ); ?></h2>
 				<p><?php esc_html_e( 'Save extra keyword phrases against individual posts, pages, and products. Open an editor and find the WP Custom Tools — Additional Keywords box.', 'wp-custom-tools' ); ?></p>
 				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=wp-custom-tools-keywords' ) ); ?>"><?php esc_html_e( 'Open Additional Keywords Tool', 'wp-custom-tools' ); ?></a></p>
+			</div>
+
+			<div class="card" style="max-width: 760px;">
+				<h2><?php esc_html_e( 'Elementor Product Card', 'wp-custom-tools' ); ?></h2>
+				<p><?php esc_html_e( 'Create a single-product card with editable image or video, title, rating, price, discount, offers, delivery text, and button. Requires Elementor to be installed and active.', 'wp-custom-tools' ); ?></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=wp-custom-tools-elementor' ) ); ?>"><?php esc_html_e( 'Widget Instructions', 'wp-custom-tools' ); ?></a></p>
 			</div>
 
 			<div class="card" style="max-width: 760px;">
@@ -173,6 +188,42 @@ final class Admin_Menu {
 						<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=product' ) ); ?>"><?php esc_html_e( 'Products', 'wp-custom-tools' ); ?></a>
 					<?php endif; ?>
 				</p>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render Elementor Product Card setup instructions.
+	 *
+	 * @return void
+	 */
+	public function render_elementor_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'wp-custom-tools' ), '', array( 'response' => 403 ) );
+		}
+
+		$elementor_active = class_exists( '\\Elementor\\Plugin' );
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Elementor Product Card', 'wp-custom-tools' ); ?></h1>
+			<?php if ( $elementor_active ) : ?>
+				<div class="notice notice-success inline"><p><?php esc_html_e( 'Elementor is active. The WP Custom Product Card widget is registered with Elementor.', 'wp-custom-tools' ); ?></p></div>
+			<?php else : ?>
+				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Elementor is not active. Install and activate Elementor to use this widget. WP Custom Tools will continue to work without Elementor.', 'wp-custom-tools' ); ?></p></div>
+			<?php endif; ?>
+
+			<div class="card" style="max-width: 800px;">
+				<h2><?php esc_html_e( 'How to add the widget', 'wp-custom-tools' ); ?></h2>
+				<ol>
+					<li><?php esc_html_e( 'Open a page or template with Elementor.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Search the Elementor widget panel for “WP Custom Product Card”.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Drag the widget onto the page, then edit its fields in the Content and Style tabs.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Choose Product Image or Product Video. For video, provide a direct MP4/WebM file URL and optionally choose a poster image.', 'wp-custom-tools' ); ?></li>
+					<li><?php esc_html_e( 'Set the title, subtitle/author, rating, reviews, variant, badge, currency, current price, MRP, discount, bank offer, delivery text, button label, and button URL.', 'wp-custom-tools' ); ?></li>
+				</ol>
+				<p><?php esc_html_e( 'Visual options include card width/alignment, background, padding, border, radius, shadow, media height/fit/background, typography, colors, and button styling.', 'wp-custom-tools' ); ?></p>
+				<p class="description"><?php esc_html_e( 'This widget is a manually editable display card. It does not automatically fetch live product price, availability, reviews, or cart behavior from WooCommerce. Link the button to the desired product or destination yourself.', 'wp-custom-tools' ); ?></p>
 			</div>
 		</div>
 		<?php
