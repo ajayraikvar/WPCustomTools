@@ -25,7 +25,7 @@
 		}
 
 		var list = box.querySelector('.categorychecklist');
-		if (!list) {
+		if (!list || !list.parentNode) {
 			return;
 		}
 
@@ -48,7 +48,10 @@
 
 		wrapper.appendChild(input);
 		wrapper.appendChild(status);
-		box.insertBefore(wrapper, list);
+
+		// The checklist is nested inside a tabs panel, not a direct child of the metabox.
+		// Insert the control through the list's own parent to avoid a NotFoundError.
+		list.parentNode.insertBefore(wrapper, list);
 
 		function filterItems() {
 			var query = normalize(input.value);
