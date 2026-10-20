@@ -39,6 +39,9 @@ final class Plugin {
 	 */
 	public function init() {
 		require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-category-search.php';
+		require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-admin-menu.php';
+
 		Category_Search::instance()->init();
+		Admin_Menu::instance()->init();
 	}
 }
