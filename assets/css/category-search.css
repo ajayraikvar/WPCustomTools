@@ -1,0 +1,40 @@
+.wpct-category-search-wrap {
+	margin: 10px 0 8px;
+	padding-right: 2px;
+}
+
+.wpct-category-search {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	min-height: 36px;
+	padding: 6px 10px;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
+	background: #fff;
+	color: #1d2327;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.wpct-category-search:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: 2px solid transparent;
+}
+
+#product_catdiv .categorychecklist li.wpct-search-hidden {
+	display: none !important;
+}
+
+#product_catdiv .categorychecklist li.wpct-search-match > label {
+	font-weight: 600;
+}
+
+#product_catdiv .categorychecklist li.wpct-search-match {
+	display: list-item;
+}
+
+#product_catdiv .wpct-category-search-status {
+	display: block;
+}
