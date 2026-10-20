@@ -194,7 +194,7 @@ final class Admin_Menu {
 
 		check_admin_referer( 'wpct_check_updates' );
 
-		$response = wp_remote_get(
+		$response = wp_safe_remote_get(
 			self::VERSION_SOURCE_URL,
 			array(
 				'timeout'             => 8,
@@ -208,9 +208,9 @@ final class Admin_Menu {
 		);
 
 		$result = array(
-			'status'       => 'error',
-			'message'      => __( 'Unable to check GitHub right now. Please try again later.', 'wp-custom-tools' ),
-			'checked_at'   => time(),
+			'status'         => 'error',
+			'message'        => __( 'Unable to check GitHub right now. Please try again later.', 'wp-custom-tools' ),
+			'checked_at'     => time(),
 			'latest_version' => '',
 		);
 
