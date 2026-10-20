@@ -1,0 +1,27 @@
+.wpct-keywords-tool {
+	max-width: 900px;
+}
+
+.wpct-keywords-tool .wpct-additional-keywords-input {
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 120px;
+	font-family: inherit;
+	line-height: 1.6;
+}
+
+.wpct-keywords-toolbar {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 0;
+}
+
+.wpct-keywords-count {
+	font-weight: 600;
+}
+
+.wpct-copy-status {
+	color: #2271b1;
+}
