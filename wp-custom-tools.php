@@ -3,7 +3,7 @@
  * Plugin Name: WP Custom Tools
  * Plugin URI: https://www.ajayraikvar.com
  * Description: A modular collection of practical WordPress tools. Includes searchable WooCommerce product categories and is designed for future tools, widgets, and templates.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Author: Ajay Raikvar
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WPCUSTOMTOOLS_VERSION', '1.0.1' );
+define( 'WPCUSTOMTOOLS_VERSION', '1.0.2' );
 define( 'WPCUSTOMTOOLS_FILE', __FILE__ );
 define( 'WPCUSTOMTOOLS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPCUSTOMTOOLS_URL', plugin_dir_url( __FILE__ ) );
