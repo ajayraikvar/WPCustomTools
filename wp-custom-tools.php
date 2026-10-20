@@ -28,6 +28,6 @@ require_once WPCUSTOMTOOLS_PATH . 'includes/class-wpct-plugin.php';
 add_action(
 	'plugins_loaded',
 	static function () {
-		\\WPCustomTools\\Plugin::instance()->init();
+		\WPCustomTools\Plugin::instance()->init();
 	}
 );
