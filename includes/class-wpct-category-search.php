@@ -34,7 +34,7 @@ final class Category_Search {
 	}
 
 	/**
-	 * Load assets only on the WooCommerce product editor.
+	 * Load assets only on the WooCommerce product editor for users allowed to edit products.
 	 *
 	 * @param string $hook Current admin page hook.
 	 */
@@ -44,7 +44,12 @@ final class Category_Search {
 		}
 
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( ! $screen || 'product' !== $screen->post_type || ! class_exists( 'WooCommerce' ) ) {
+		if (
+			! $screen ||
+			'product' !== $screen->post_type ||
+			! current_user_can( 'edit_products' ) ||
+			! class_exists( 'WooCommerce' )
+		) {
 			return;
 		}
 
