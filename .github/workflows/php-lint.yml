@@ -30,7 +30,8 @@ jobs:
 
       - name: Check PHP syntax
         run: |
-          find . -name '*.php' -print0 | xargs -0 -n1 php -l
+          find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+          php tests/php-additional-keywords-smoke.php
 
   javascript-lint:
     name: JavaScript syntax
@@ -45,7 +46,10 @@ jobs:
           node-version: '22'
 
       - name: Check JavaScript syntax
-        run: node --check assets/js/category-search.js
+        run: |
+          node --check assets/js/category-search.js
+          node --check assets/js/additional-keywords.js
+          node tests/js-tools-smoke.cjs
 
   package:
     name: Build and verify installable ZIP
@@ -66,8 +70,56 @@ jobs:
           (cd package && zip -qr "../dist/WPCustomTools-v${VERSION}.zip" wp-custom-tools)
           unzip -t "dist/WPCustomTools-v${VERSION}.zip"
           unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/wp-custom-tools.php$'
-          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/includes/class-wpct-admin-menu.php$'
-          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/js/category-search.js$'
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/includes/class-wpct-admin-menu.php
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/includes/class-wpct-additional-keywords.php
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/js/category-search.js
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/js/additional-keywords.js
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+          unzip -Z1 "dist/WPCustomTools-v${VERSION}.zip" | grep -q '^wp-custom-tools/assets/css/additional-keywords.css
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPCustomTools-installable
+          path: dist/WPCustomTools-v*.zip
+          if-no-files-found: error
+          retention-days: 30
+
 
       - name: Upload installable ZIP
         uses: actions/upload-artifact@v4
