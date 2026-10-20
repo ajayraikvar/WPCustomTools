@@ -165,8 +165,11 @@ final class Admin_Menu {
 							<p><strong><?php esc_html_e( 'Latest GitHub version:', 'wp-custom-tools' ); ?></strong> <?php echo esc_html( $result['latest_version'] ); ?></p>
 						<?php endif; ?>
 						<?php if ( 'update_available' === $result['status'] ) : ?>
-							<p><?php esc_html_e( 'A newer source version is available. Review the repository and its release notes before installing an update.', 'wp-custom-tools' ); ?></p>
-							<p><a class="button" href="<?php echo esc_url( self::REPOSITORY_URL . '/releases' ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View GitHub Releases', 'wp-custom-tools' ); ?></a> <a href="<?php echo esc_url( self::REPOSITORY_URL ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open Repository', 'wp-custom-tools' ); ?></a></p>
+							<p><?php esc_html_e( 'A newer source version is available. Review the release notes and download a reviewed installable package before updating.', 'wp-custom-tools' ); ?></p>
+							<p>
+								<a class="button button-primary" href="<?php echo esc_url( self::REPOSITORY_URL . '/actions/workflows/php-lint.yml' ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View Build and ZIP Artifact', 'wp-custom-tools' ); ?></a>
+								<a class="button" href="<?php echo esc_url( self::REPOSITORY_URL . '/releases' ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View GitHub Releases', 'wp-custom-tools' ); ?></a>
+							</p>
 						<?php endif; ?>
 						<?php if ( ! empty( $result['checked_at'] ) ) : ?>
 							<p><small><?php echo esc_html( sprintf( __( 'Last checked: %s', 'wp-custom-tools' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $result['checked_at'] ) ) ); ?></small></p>
@@ -178,6 +181,7 @@ final class Admin_Menu {
 			</div>
 
 			<p><a href="<?php echo esc_url( self::REPOSITORY_URL ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open WP Custom Tools on GitHub', 'wp-custom-tools' ); ?></a></p>
+			<p class="description"><?php esc_html_e( 'This feature checks the published source version but does not install updates automatically. Review and back up before replacing the plugin.', 'wp-custom-tools' ); ?></p>
 		</div>
 		<?php
 	}
