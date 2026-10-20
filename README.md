@@ -36,6 +36,12 @@ The check happens only when an administrator clicks **Check for Updates**. It us
 4. Edit or create a WooCommerce product. Search appears in the **All categories** panel.
 5. Use **WP Custom Tools → Updates → Check for Updates** for a manual GitHub version check.
 
+## Downloading a build
+
+Each successful GitHub Actions run generates the WordPress-installable ZIP as the **WPCustomTools-installable** artifact, retained for 30 days. Open [the workflow](https://github.com/ajayraikvar/WPCustomTools/actions/workflows/php-lint.yml), choose the latest successful run, and download the artifact. Inside that artifact is the versioned installable ZIP.
+
+If the Updates page reports a newer source version, download a successful build artifact only after confirming its version and reviewing the changes. Back up the website before replacing the existing plugin.
+
 ## Structure
 
 ```text
@@ -69,11 +75,11 @@ No software can be guaranteed completely secure. Please test in staging and keep
 
 ## GitHub version check limitation
 
-The Updates page compares the installed version with the repository's Stable tag. It reports whether a newer version is listed and links to GitHub Releases / repository. It does not silently install or automatically replace plugin files.
+The Updates page compares the installed version with the repository's Stable tag. It reports whether a newer version is listed and links to the GitHub Actions build / Releases pages. It does not silently install or automatically replace plugin files.
 
 ## Development checks
 
-GitHub Actions runs PHP syntax checks on PHP 8.3 and 8.5 and JavaScript syntax validation with Node.js.
+GitHub Actions runs PHP syntax checks on PHP 8.3 and 8.5, JavaScript syntax validation with Node.js, and package integrity checks.
 
 ## License
 
